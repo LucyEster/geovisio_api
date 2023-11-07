@@ -1,0 +1,96 @@
+[2023-10-27 03:45:15,539] ERROR log_exception() L825  Exception on / [GET] - call_trace=C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\flask\app.py L825 
+Traceback (most recent call last):
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\flask\app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\flask\app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\flask_cors\extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\flask\app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\flask\app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\Documents\meu_app_api\app.py", line 23, in home
+    return render_template('index.html')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\flask\templating.py", line 151, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\jinja2\environment.py", line 1081, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\jinja2\environment.py", line 1010, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\jinja2\environment.py", line 969, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\flask\templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\flask\templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: index.html
+[2023-10-27 03:45:15,549] INFO _log() L96   127.0.0.1 - - [27/Oct/2023 03:45:15] "[35m[1mGET / HTTP/1.1[0m" 500 - - call_trace=C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\werkzeug\_internal.py L96  
+[2023-10-27 03:45:16,934] ERROR log_exception() L825  Exception on / [GET] - call_trace=C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\flask\app.py L825 
+Traceback (most recent call last):
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\flask\app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\flask\app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\flask_cors\extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\flask\app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\flask\app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\Documents\meu_app_api\app.py", line 23, in home
+    return render_template('index.html')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\flask\templating.py", line 151, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\jinja2\environment.py", line 1081, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\jinja2\environment.py", line 1010, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\jinja2\environment.py", line 969, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\flask\templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\flask\templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: index.html
+[2023-10-27 03:45:16,947] INFO _log() L96   127.0.0.1 - - [27/Oct/2023 03:45:16] "[35m[1mGET / HTTP/1.1[0m" 500 - - call_trace=C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\werkzeug\_internal.py L96  
+[2023-10-27 03:48:22,956] INFO _log() L96   127.0.0.1 - - [27/Oct/2023 03:48:22] "GET / HTTP/1.1" 200 - - call_trace=C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\werkzeug\_internal.py L96  
+[2023-10-27 03:48:23,015] INFO _log() L96   127.0.0.1 - - [27/Oct/2023 03:48:23] "[33mGET /styles.css HTTP/1.1[0m" 404 - - call_trace=C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\werkzeug\_internal.py L96  
+[2023-10-27 03:48:23,206] INFO _log() L96   127.0.0.1 - - [27/Oct/2023 03:48:23] "[33mGET /scripts.js HTTP/1.1[0m" 404 - - call_trace=C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\werkzeug\_internal.py L96  
+[2023-10-27 03:50:18,943] INFO _log() L96   127.0.0.1 - - [27/Oct/2023 03:50:18] "GET / HTTP/1.1" 200 - - call_trace=C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\werkzeug\_internal.py L96  
+[2023-10-27 03:50:18,991] INFO _log() L96   127.0.0.1 - - [27/Oct/2023 03:50:18] "[33mGET /styles.css HTTP/1.1[0m" 404 - - call_trace=C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\werkzeug\_internal.py L96  
+[2023-10-27 03:50:19,208] INFO _log() L96   127.0.0.1 - - [27/Oct/2023 03:50:19] "[33mGET /scripts.js HTTP/1.1[0m" 404 - - call_trace=C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\werkzeug\_internal.py L96  
+[2023-10-27 03:50:22,258] INFO _log() L96   127.0.0.1 - - [27/Oct/2023 03:50:22] "GET / HTTP/1.1" 200 - - call_trace=C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\werkzeug\_internal.py L96  
+[2023-10-27 03:50:22,308] INFO _log() L96   127.0.0.1 - - [27/Oct/2023 03:50:22] "[33mGET /styles.css HTTP/1.1[0m" 404 - - call_trace=C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\werkzeug\_internal.py L96  
+[2023-10-27 03:50:22,503] INFO _log() L96   127.0.0.1 - - [27/Oct/2023 03:50:22] "[33mGET /scripts.js HTTP/1.1[0m" 404 - - call_trace=C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\werkzeug\_internal.py L96  
+[2023-10-27 03:54:44,265] INFO _log() L96   127.0.0.1 - - [27/Oct/2023 03:54:44] "GET / HTTP/1.1" 200 - - call_trace=C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\werkzeug\_internal.py L96  
+[2023-10-27 03:54:44,303] INFO _log() L96   127.0.0.1 - - [27/Oct/2023 03:54:44] "[33mGET /styles.css HTTP/1.1[0m" 404 - - call_trace=C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\werkzeug\_internal.py L96  
+[2023-10-27 03:54:44,529] INFO _log() L96   127.0.0.1 - - [27/Oct/2023 03:54:44] "[33mGET /scripts.js HTTP/1.1[0m" 404 - - call_trace=C:\Users\luciv\.virtualenvs\meu_app_api-SjqvraV8\Lib\site-packages\werkzeug\_internal.py L96  
