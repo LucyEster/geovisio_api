@@ -1,11 +1,46 @@
-# Minha API
+# GeoVisio API
 
-Este pequeno projeto faz parte do material diático da Disciplina **Desenvolvimento Full Stack Básico** 
+Esta API tem por princípio realizar a manipulação de dados com base geográfica.
 
-O objetivo aqui é ilutsrar o conteúdo apresentado ao longo das três aulas da disciplina.
+À partir de coordenadas, é possível cadastrar itens que são chamados de catálogos geográficos.
+
+Nesta primeira versão, é possível:
+[x] Cadastrar coordenadas;
+[x] Recuperar uma lista de coordenadas;
+[x] Cadastrar um catálogo geográfico, dada uma coordenada pré-cadastrada;
+[x] Recuperar uma lista de catálogos geográficos;
+[x] Recuperar uma lista de hashtags que foram cadastradas nos catálogos geográficos.
+
+Para backlog futuro, esta API fornecerá:
+
+[] Edição e remoção de catálogos e coordenadas;
+[] Categorização de grandes áreas;
+[] Rotas de acompanhamento de atualização de catálogos em linha de tempo para determinada coordenada (é possível já cadastrar mais de um catálogo geográfico para uma determinada coordenada);
+[] Rotas para Sistema de login.
+
+# Qual é a aplicação desta api?
+
+Se você possui qualquer tipo de dado georreferenciado, é possível utilizar para associar informações do seu negócio à essas coordenadas.
+
+É aplicável às áreas de:
+> Agro (mapeamento de safras, escoamento, status de lavouras);
+> Petróleo (mapeamento de dados sobre extração e/ou potencial extração);
+> Geológico (mapeamento de terreno);
+> Biológico (catalogação de fauna, flora, etc.)
+> Mobilidade (transportes, pontos de taxi, ônibus, etc.)
+> Saúde pública (mapeamento de UBS, ações de vacinação por região)
+> Segurança (tático, policial, criminalidade)
+> Defesa Civil (Pontos de alagamento, risco de barrancos, etc.)
+
+Funciona da seguinte forma:
+    . Para cada coordenada cadastrada, é possível cadastradar um ou vários catálogos.
+    . Cada catálogo possui título, descrição, hashtag, imagem e estará associada à uma coordenada.
+    . Dada uma hashtag, é possível filtrar catálogos que utilizam essa hastag.
 
 ---
 ## Como executar 
+
+> Para este trabalho foi utilizada a versão do python 3.12.
 
 
 Será necessário ter todas as libs python listadas no `requirements.txt` instaladas.
