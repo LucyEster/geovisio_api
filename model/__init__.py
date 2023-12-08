@@ -5,8 +5,9 @@ import os
 
 # importando os elementos definidos no modelo
 from model.base import Base
-from model.comentario import Comentario
-from model.produto import Produto
+
+from model.geo_catalog import GeoCatalog
+from model.coordinate import Coordinate
 
 db_path = "database/"
 # Verifica se o diretorio não existe

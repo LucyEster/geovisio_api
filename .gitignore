@@ -1,0 +1,4 @@
+# arquivos de configuração
+/log
+Pipfile
+pyvenv.cfg

@@ -1,173 +1,167 @@
 from flask_openapi3 import OpenAPI, Info, Tag
-from flask import redirect, render_template
+from typing import Union
+from flask import redirect
 from urllib.parse import unquote
+from sqlalchemy.orm import joinedload
 
 from sqlalchemy.exc import IntegrityError
 
-from model import Session, Produto, Comentario
+from model import Session, Coordinate, GeoCatalog
 from logger import logger
 from schemas import *
 from flask_cors import CORS
 
-info = Info(title="Minha API", version="1.0.0")
+info = Info(title="GeoVisio API", version="1.0.0")
 app = OpenAPI(__name__, info=info)
 CORS(app)
 
-# definindo tags
 home_tag = Tag(name="Documentação", description="Seleção de documentação: Swagger, Redoc ou RapiDoc")
-produto_tag = Tag(name="Produto", description="Adição, visualização e remoção de produtos à base")
-comentario_tag = Tag(name="Comentario", description="Adição de um comentário à um produtos cadastrado na base")
+coordinate_tag = Tag(name="Coordenada", description="Adição e visualização de coordenadas na base de dados sqlite.")
+geo_catalog_tag = Tag(name="Catálogo geográfico", description="Adição e visualização de catálogos geográficos e informações relacionadas à eles na base de dados sqlite.")
 
-@app.route('/')
+@app.get('/', tags=[home_tag])
 def home():
-   return render_template('index.html')
-
-#@app.get('/', tags=[home_tag])
-#def home():
-#    """Redireciona para /openapi, tela que permite a escolha do estilo de documentação.
-#    """
-#    return redirect('/openapi')
-
-
-@app.post('/produto', tags=[produto_tag],
-          responses={"200": ProdutoViewSchema, "409": ErrorSchema, "400": ErrorSchema})
-def add_produto(form: ProdutoSchema):
-    """Adiciona um novo Produto à base de dados
-
-    Retorna uma representação dos produtos e comentários associados.
+    """Redireciona para /openapi, tela que permite a escolha do estilo de documentação.
     """
-    produto = Produto(
-        nome=form.nome,
-        quantidade=form.quantidade,
-        valor=form.valor)
-    logger.debug(f"Adicionando produto de nome: '{produto.nome}'")
+    return redirect('/openapi')
+
+@app.post('/coordinate', tags=[coordinate_tag],
+          responses={"200": CoordinateViewSchema, "409": ErrorSchema, "400": ErrorSchema})
+def add_coordinate(form: CoordinateSchema):
+    """Adiciona uma nova coordenada à base de dados.
+
+    Retorna uma representação das coordenadas persistidas.
+    """
+    coordinate = Coordinate(
+        latitude=form.latitude,
+        longitude=form.longitude)
+    logger.debug(f"Adicionando coordenada: '{coordinate.latitude, coordinate.longitude}'")
     try:
-        # criando conexão com a base
         session = Session()
-        # adicionando produto
-        session.add(produto)
-        # efetivando o camando de adição de novo item na tabela
+        session.add(coordinate)
         session.commit()
-        logger.debug(f"Adicionado produto de nome: '{produto.nome}'")
-        return apresenta_produto(produto), 200
+        logger.debug(f"Adicionando coordenada: '{coordinate.latitude, coordinate.longitude}'")
+        
+        # retorna informação de inserção conforme especificado no schema.
+        return view_coordinate(coordinate), 200
 
     except IntegrityError as e:
-        # como a duplicidade do nome é a provável razão do IntegrityError
-        error_msg = "Produto de mesmo nome já salvo na base :/"
-        logger.warning(f"Erro ao adicionar produto '{produto.nome}', {error_msg}")
+        # inicialmente uma mesma coordenada não deve ser cadastrada mais de uma vez
+        error_msg = "Coordenada já salva na base!"
+        logger.warning(f"Erro ao adicionar coordenada '{coordinate.latitude, coordinate.longitude}', {error_msg}")
         return {"mesage": error_msg}, 409
 
     except Exception as e:
         # caso um erro fora do previsto
-        error_msg = "Não foi possível salvar novo item :/"
-        logger.warning(f"Erro ao adicionar produto '{produto.nome}', {error_msg}")
+        error_msg = "Não foi possível salvar coordenada!"
+        logger.warning(f"Erro ao adicionar coordenada '{coordinate.latitude, coordinate.longitude}', {error_msg}")
         return {"mesage": error_msg}, 400
 
+@app.get('/coordinates', tags=[coordinate_tag],
+         responses={"200": ViewCoordinatesSchema, "404": ErrorSchema})
+def get_coordinates():
+    """Faz a busca por todas as coordenadas cadastradas.
 
-@app.get('/produtos', tags=[produto_tag],
-         responses={"200": ListagemProdutosSchema, "404": ErrorSchema})
-def get_produtos():
-    """Faz a busca por todos os Produto cadastrados
-
-    Retorna uma representação da listagem de produtos.
+    Retorna uma representação da listagem de coordenadas (sem relação com outras entidades) encontradas na base.
+    É uma representação simples de lista de latitudes e longitudes.
     """
-    logger.debug(f"Coletando produtos ")
+    logger.debug(f"Coletando coordenadas ")
     # criando conexão com a base
     session = Session()
     # fazendo a busca
-    produtos = session.query(Produto).all()
+    coordinates = session.query(Coordinate).all()
 
-    if not produtos:
-        # se não há produtos cadastrados
-        return {"produtos": []}, 200
+    if not coordinates:
+        # se não há coordenadas cadastradas
+        return {"coordinates": []}, 200
     else:
-        logger.debug(f"%d rodutos econtrados" % len(produtos))
-        # retorna a representação de produto
-        print(produtos)
-        return apresenta_produtos(produtos), 200
+        logger.debug(f"%d coordenadas encontradas" % len(coordinates))
+        # retorna a representação de coordenadas.
+        return view_coordinates(coordinates), 200
 
+@app.post('/geo_catalog', tags=[geo_catalog_tag],
+          responses={"200": GeoCatalogViewSchema, "409": ErrorSchema, "400": ErrorSchema})
+def add_geo_catalog(form: GeoCatalogSchema):
+    """Adiciona um novo catálogo geográfico à base de dados.
 
-@app.get('/produto', tags=[produto_tag],
-         responses={"200": ProdutoViewSchema, "404": ErrorSchema})
-def get_produto(query: ProdutoBuscaSchema):
-    """Faz a busca por um Produto a partir do id do produto
-
-    Retorna uma representação dos produtos e comentários associados.
+    Retorna uma representação do catálogo geográfico que é persistido, 
+    embutido na relação com a coordenada relacionada.
     """
-    produto_id = query.id
-    logger.debug(f"Coletando dados sobre produto #{produto_id}")
-    # criando conexão com a base
-    session = Session()
-    # fazendo a busca
-    produto = session.query(Produto).filter(Produto.id == produto_id).first()
+    geo_catalog = GeoCatalog(
+        title=form.title,
+        description=form.description,
+        img_source=form.img_source,
+        hashtag=form.hashtag
+        )
+    
+    logger.debug(f"Adicionando catálogo geográfico: '{geo_catalog.title, geo_catalog.description}'")
+    try:
+        session = Session()
 
-    if not produto:
-        # se o produto não foi encontrado
-        error_msg = "Produto não encontrado na base :/"
-        logger.warning(f"Erro ao buscar produto '{produto_id}', {error_msg}")
-        return {"mesage": error_msg}, 404
+        coordinate = session.query(Coordinate).filter(Coordinate.latitude == form.latitude 
+                                                      and Coordinate.longitude == form.longitude).first()
+        coordinate.add_geo_catalog(geo_catalog)
+        session.commit()
+        logger.debug(f"Adicionando catálogo geográfico: '{geo_catalog.title, geo_catalog.description}'")
+        return view_coordinate(coordinate), 200
+
+    except Exception as e:
+        # caso um erro fora do previsto
+        error_msg = e
+        logger.warning(f"Erro ao adicionar catálogo geográfico '{geo_catalog.title, geo_catalog.description}', {error_msg}")
+        return {"mesage": error_msg}, 400
+
+@app.get('/geo_catalogs', tags=[geo_catalog_tag],
+         responses={"200": ViewGeoCatalogsSchema, "404": ErrorSchema})
+def get_geo_catalogs(query: SearchGeoCatalogSchema):
+    """Faz a busca pelos catálogos cadastrados.
+
+    Retorna uma representação da listagem de catálogos geográficos. 
+    
+    Caso haja parâmetro de busca, fará um filtro com a hashtag apresentada.
+    Caso não haja parâmetro, todos os catálogos serão retornados.
+
+    O retorno é completo, contemplando a relação entre coordenada e catálogo.
+    """
+    logger.debug(f"Coletando geo_catalogs ")
+
+    session = Session()
+
+    # fazendo a busca utilizando join entre Coordinate e Geocatalog
+    if query.hashtag:
+        geo_catalogs = session.query(Coordinate).join(
+            GeoCatalog, Coordinate.geo_catalogs).filter(
+            GeoCatalog.hashtag.contains(query.hashtag)).all()
     else:
-        logger.debug(f"Produto econtrado: '{produto.nome}'")
-        # retorna a representação de produto
-        return apresenta_produto(produto), 200
+        geo_catalogs = session.query(Coordinate).options(joinedload(Coordinate.geo_catalogs)).all()
 
-
-@app.delete('/produto', tags=[produto_tag],
-            responses={"200": ProdutoDelSchema, "404": ErrorSchema})
-def del_produto(query: ProdutoBuscaSchema):
-    """Deleta um Produto a partir do nome de produto informado
-
-    Retorna uma mensagem de confirmação da remoção.
-    """
-    produto_nome = unquote(unquote(query.nome))
-    print(produto_nome)
-    logger.debug(f"Deletando dados sobre produto #{produto_nome}")
-    # criando conexão com a base
-    session = Session()
-    # fazendo a remoção
-    count = session.query(Produto).filter(Produto.nome == produto_nome).delete()
-    session.commit()
-
-    if count:
-        # retorna a representação da mensagem de confirmação
-        logger.debug(f"Deletado produto #{produto_nome}")
-        return {"mesage": "Produto removido", "id": produto_nome}
+    if not geo_catalogs:
+        # se não há informação para retorno
+        return {"geo_catalogs": []}, 200
     else:
-        # se o produto não foi encontrado
-        error_msg = "Produto não encontrado na base :/"
-        logger.warning(f"Erro ao deletar produto #'{produto_nome}', {error_msg}")
-        return {"mesage": error_msg}, 404
+        logger.debug(f"%d geo_catalogs encontrados" % len(geo_catalogs))
+        # retorna a representação dos catálogos
+        return show_geo_catalogs(geo_catalogs), 200
+    
+@app.get('/hashtags', tags=[geo_catalog_tag],
+         responses={"200": ViewHashtagsSchema, "404": ErrorSchema})
+def get_hashtags():
+    """Faz a busca por todas as hashtags cadastradas.
 
-
-@app.post('/cometario', tags=[comentario_tag],
-          responses={"200": ProdutoViewSchema, "404": ErrorSchema})
-def add_comentario(form: ComentarioSchema):
-    """Adiciona de um novo comentário à um produtos cadastrado na base identificado pelo id
-
-    Retorna uma representação dos produtos e comentários associados.
+    Retorna uma representação da listagem de hashtags (sem duplicação) encontradas na base.
     """
-    produto_id  = form.produto_id
-    logger.debug(f"Adicionando comentários ao produto #{produto_id}")
-    # criando conexão com a base
+    logger.debug(f"Coletando hashtags")
+    
     session = Session()
-    # fazendo a busca pelo produto
-    produto = session.query(Produto).filter(Produto.id == produto_id).first()
 
-    if not produto:
-        # se produto não encontrado
-        error_msg = "Produto não encontrado na base :/"
-        logger.warning(f"Erro ao adicionar comentário ao produto '{produto_id}', {error_msg}")
-        return {"mesage": error_msg}, 404
+    hashtags = []
+    for geo_catalog in session.query(GeoCatalog.hashtag).distinct():
+        hashtags.append(geo_catalog.hashtag)
 
-    # criando o comentário
-    texto = form.texto
-    comentario = Comentario(texto)
-
-    # adicionando o comentário ao produto
-    produto.adiciona_comentario(comentario)
-    session.commit()
-
-    logger.debug(f"Adicionado comentário ao produto #{produto_id}")
-
-    # retorna a representação de produto
-    return apresenta_produto(produto), 200
+    if not hashtags:
+        # se não há hashtags cadastradas
+        return {"hashtags": []}, 200
+    else:
+        logger.debug(f"%d hashtags encontrados" % len(hashtags))
+        # retorna a representação de hashtags
+        return {"hashtags": hashtags}, 200
