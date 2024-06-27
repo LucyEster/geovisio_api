@@ -23,6 +23,12 @@ class SearchGeoCatalogSchema(BaseModel):
     """
     hashtag: Optional[str] = None
 
+class DeleteGeoCatalogSchema(BaseModel):
+    """ Define como deve ser a estrutura que representa a remoção. Que será
+        feita apenas com base no id associado.
+    """
+    id: Optional[int] = None
+
 
 class ViewGeoCatalogsSchema(BaseModel):
     """ Define como uma listagem de catálogos geográficos será retornada.
@@ -63,13 +69,6 @@ class GeoCatalogViewSchema(BaseModel):
     img_source: Base64UrlBytes = b'VGhpcyBpcyB0aGUgd2F5'
     hashtag: str = "#example"
 
-
-class GeoCatalogDelSchema(BaseModel):
-    """ Define como deve ser a estrutura do dado retornado após uma requisição
-        de remoção.
-    """
-    title: str
-    description: str
 
 def show_geo_catalog(geo_catalog: GeoCatalog):
     """ Retorna uma representação do catálogo geográfico seguindo schema definido em

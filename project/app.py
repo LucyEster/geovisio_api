@@ -142,6 +142,44 @@ def get_geo_catalogs(query: SearchGeoCatalogSchema):
         logger.debug(f"%d geo_catalogs encontrados" % len(geo_catalogs))
         # retorna a representação dos catálogos
         return show_geo_catalogs(geo_catalogs), 200
+
+@app.delete('/geo_catalog', tags=[geo_catalog_tag],
+         responses={"200": ViewGeoCatalogsSchema, "404": ErrorSchema})
+def del_geo_catalogs(query: DeleteGeoCatalogSchema):
+    """Faz a busca pelos catálogos cadastrados.
+
+    Retorna uma representação da listagem de catálogos geográficos. 
+    
+    Caso haja parâmetro de busca, fará um filtro com a hashtag apresentada.
+    Caso não haja parâmetro, todos os catálogos serão retornados.
+
+    O retorno é completo, contemplando a relação entre coordenada e catálogo.
+    """
+    logger.debug(f"Coletando geo_catalogs ")
+
+    session = Session()
+
+    # fazendo a busca utilizando join entre Coordinate e Geocatalog
+    if query.id:
+        geo_catalog = session.query(GeoCatalog).filter(
+            GeoCatalog.id == query.id).first()
+        
+
+    if not geo_catalog:
+        # se não há informação para retorno
+        return {"erro": f"não há catálogos com esse identificador (id: %)." % query.id}, 404
+    else:
+        try:
+            session.delete(geo_catalog)
+            session.commit()
+            logger.debug(" geo_catalog %d removido" %  query.id)
+            # retorna a representação dos catálogos
+            return {"success": "Removido com sucesso."}, 200
+        except Exception as e:
+            # caso um erro fora do previsto
+            error_msg = e
+            logger.warning(f"Erro ao remover catálogo geográfico '{geo_catalog.title, geo_catalog.description}', {error_msg}")
+            return {"mesage": error_msg}, 400
     
 @app.get('/hashtags', tags=[geo_catalog_tag],
          responses={"200": ViewHashtagsSchema, "404": ErrorSchema})

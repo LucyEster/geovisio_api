@@ -1,5 +1,5 @@
 from schemas.geo_catalog import GeoCatalogSchema, SearchGeoCatalogSchema, GeoCatalogViewSchema, \
-                                ViewGeoCatalogsSchema, GeoCatalogDelSchema, ViewHashtagsSchema, show_geo_catalog, \
+                                ViewGeoCatalogsSchema, DeleteGeoCatalogSchema, ViewHashtagsSchema, show_geo_catalog, \
                                 show_geo_catalogs
 from schemas.coordinate import CoordinateSchema, CoordinateViewSchema, \
                                ViewCoordinatesSchema, CoordinateDelSchema, view_coordinate, \

@@ -1,0 +1,7 @@
+
+services:
+  flask-api:
+    build:
+      context: ./project  # Caminho para o diretório onde está o Dockerfile do Flask
+    ports:
+      - "5000:5000"  # Mapeia a porta do host para a porta do container
