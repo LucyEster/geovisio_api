@@ -23,21 +23,7 @@ Nesta primeira versão, é possível:
 
 - Recuperar uma lista de hashtags que foram cadastradas nos catálogos geográficos.
 
-  
 
-Para backlog futuro, esta API fornecerá:
-
-  
-
-- Edição e remoção de catálogos e coordenadas;
-
-- Categorização de grandes áreas;
-
-- Rotas de acompanhamento de atualização de catálogos em linha de tempo para determinada coordenada (é possível já cadastrar mais de um catálogo geográfico para uma determinada coordenada);
-
-- Rotas para Sistema de login.
-
-  
 
 ## Qual é a aplicação desta api?
 
@@ -81,66 +67,20 @@ Funciona da seguinte forma:
 
   
 
-> Para este trabalho foi utilizada a versão do python 3.12.
-
-  
-  
-
-Será necessário ter todas as libs python listadas no `requirements.txt` instaladas.
-
-Após clonar o repositório, é necessário ir ao diretório raiz, pelo terminal, para poder executar os comandos descritos abaixo.
+> Para este trabalho foi utilizado o docker e há um arquivo Dockerfile e docker-compose.yml.
 
   
 
-> É fortemente indicado o uso de ambientes virtuais do tipo [virtualenv](https://virtualenv.pypa.io/en/latest/installation.html).
+Para executar a API basta executar na raiz do projeto:
 
   
 
 ```
 
-(env)$ pip install -r requirements.txt
+docker-compose up --build
 
 ```
 
-  
-
-Este comando instala as dependências/bibliotecas, descritas no arquivo `requirements.txt`.
-
-  
-
-Para executar a API basta executar:
-
-  
-
-```
-
-(env)$ flask run --host 0.0.0.0 --port 5000
-
-```
-
-  
-
-Em modo de desenvolvimento é recomendado executar utilizando o parâmetro reload, que reiniciará o servidor
-
-automaticamente após uma mudança no código fonte.
-
-  
-
-```
-
-(env)$ flask run --host 0.0.0.0 --port 5000 --reload
-
-```
-
-  
 
 Abra o [http://localhost:5000/#/](http://localhost:5000/#/) no navegador para verificar o status da API em execução.
 
-## Endpoints
-| Rota | Método  | Recebe | Resultado (OK)|
-|--|--|--|--|
-| /coordinate |POST | latitude(float), longitude (float) |200 - Latitude e longitude cadastrada com sucesso.
-|/coordinates| GET| (sem parâmetros)| 200 - Lista de coordenadas com latitude e longitude.
-|/geo_catalog|POST|latitude(float), longitude (float), title(str 144), description(str 3000), hashtag(str 40), img_source(base64Url) | 200 - Catálogo cadastrado
-|/geo_catalogs|GET| hashtag(str 40) [OPICIONAL]|200 - Lista de catálogos
-|/hashtags| GET |(sem parâmetros) | 200 - Lista de hashtags
