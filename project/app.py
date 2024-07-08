@@ -34,7 +34,12 @@ def add_coordinate(form: CoordinateSchema):
     """
     coordinate = Coordinate(
         latitude=form.latitude,
-        longitude=form.longitude)
+        longitude=form.longitude,
+        city=form.city,
+        region=form.region,
+        country=form.country,
+        name=form.name,
+        contact=form.contact)
     logger.debug(f"Adicionando coordenada: '{coordinate.latitude, coordinate.longitude}'")
     try:
         session = Session()
@@ -59,7 +64,7 @@ def add_coordinate(form: CoordinateSchema):
 
 @app.get('/coordinates', tags=[coordinate_tag],
          responses={"200": ViewCoordinatesSchema, "404": ErrorSchema})
-def get_coordinates():
+def get_coordinates(query: SearchCoordinateSchema):
     """Faz a busca por todas as coordenadas cadastradas.
 
     Retorna uma representação da listagem de coordenadas (sem relação com outras entidades) encontradas na base.
@@ -69,7 +74,12 @@ def get_coordinates():
     # criando conexão com a base
     session = Session()
     # fazendo a busca
-    coordinates = session.query(Coordinate).all()
+
+    if(query.name):
+        coordinates = session.query(Coordinate).filter(
+            Coordinate.name.contains(query.name)).all()
+    else: 
+        coordinates = session.query(Coordinate).all()
 
     if not coordinates:
         # se não há coordenadas cadastradas
@@ -132,6 +142,10 @@ def get_geo_catalogs(query: SearchGeoCatalogSchema):
         geo_catalogs = session.query(Coordinate).join(
             GeoCatalog, Coordinate.geo_catalogs).filter(
             GeoCatalog.hashtag.contains(query.hashtag)).all()
+    elif query.region:
+        geo_catalogs = session.query(Coordinate).join(
+            GeoCatalog, Coordinate.geo_catalogs).filter(
+            Coordinate.region.contains(query.region)).all()
     else:
         geo_catalogs = session.query(Coordinate).options(joinedload(Coordinate.geo_catalogs)).all()
 
@@ -203,3 +217,26 @@ def get_hashtags():
         logger.debug(f"%d hashtags encontrados" % len(hashtags))
         # retorna a representação de hashtags
         return {"hashtags": hashtags}, 200
+    
+@app.get('/regions', tags=[geo_catalog_tag],
+         responses={"200": ViewHashtagsSchema, "404": ErrorSchema})
+def get_regions():
+    """Faz a busca por todas as hashtags cadastradas.
+
+    Retorna uma representação da listagem de hashtags (sem duplicação) encontradas na base.
+    """
+    logger.debug(f"Coletando regiões")
+    
+    session = Session()
+
+    regions = []
+    for coordinate in session.query(Coordinate.region).distinct():
+        regions.append(coordinate.region)
+
+    if not regions:
+        # se não há hashtags cadastradas
+        return {"regions": []}, 200
+    else:
+        logger.debug(f"%d regiões encontradas" % len(regions))
+        # retorna a representação de hashtags
+        return {"regions": regions}, 200

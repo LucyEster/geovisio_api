@@ -15,6 +15,11 @@ class GeoCatalogSchema(BaseModel):
     hashtag: str = "#example"
     latitude: float = -23.3528444
     longitude: float = -44.7228947
+    name: str = "example"
+    contact: str = "exampple"
+    city: str = "example"
+    region: str = "example"
+    country: str = "example"
 
 
 class SearchGeoCatalogSchema(BaseModel):
@@ -22,6 +27,7 @@ class SearchGeoCatalogSchema(BaseModel):
         feita apenas com base na hashtag associada.
     """
     hashtag: Optional[str] = None
+    region: Optional[str] = None
 
 class DeleteGeoCatalogSchema(BaseModel):
     """ Define como deve ser a estrutura que representa a remoção. Que será
@@ -50,6 +56,11 @@ def show_geo_catalogs(geo_catalogs_with_coordinate: List[Coordinate]):
             result.append({
                 "id": int(geo_catalog.id),
                 "title": str(geo_catalog.title),
+                "name": str(coordinate.name),
+                "contact": str(coordinate.contact),
+                "city": str(coordinate.city),
+                "region": str(coordinate.region),
+                "country": str(coordinate.country),
                 "description": str(geo_catalog.description),
                 "hashtag": str(geo_catalog.hashtag),
                 "created_at": str(geo_catalog.created_at),

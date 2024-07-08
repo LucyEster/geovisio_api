@@ -10,6 +10,11 @@ class CoordinateSchema(BaseModel):
     """
     latitude: float = -23.3528444
     longitude: float = -44.7228947
+    city: str = "São Paulo"
+    region: str = "São Paulo"
+    country: str = "Brazil"
+    name: str = "example"
+    contact: str = "example.com"
 
 
 class ViewCoordinatesSchema(BaseModel):
@@ -17,6 +22,11 @@ class ViewCoordinatesSchema(BaseModel):
     """
     coordinate:List[CoordinateSchema]
 
+class SearchCoordinateSchema(BaseModel):
+    """ Define como deve ser a estrutura que representa a busca. Que será
+        feita apenas com base no nome da coordenada associada.
+    """
+    name: Optional[str] = None
 
 def view_coordinates(coordinates: List[Coordinate]):
     """ Retorna uma representação do da coordenada seguindo o schema definido em
@@ -27,6 +37,11 @@ def view_coordinates(coordinates: List[Coordinate]):
         result.append({
             "latitude": float(coordinate.latitude),
             "longitude": float(coordinate.longitude),
+            "city": str(coordinate.city),
+            "region": str(coordinate.region),
+            "country": str(coordinate.country),
+            "name": str(coordinate.name),
+            "contact": str(coordinate.contact),
             "created_at": str(coordinate.created_at)
         })
     return {"coordinates": result}
@@ -37,6 +52,11 @@ class CoordinateViewSchema(BaseModel):
     id: int = 1
     latitude: float = -23.3528444
     longitude: float = -44.7228947
+    city: str = "São Paulo"
+    region: str = "São Paulo"
+    country: str = "Brazil"
+    name: str = "example"
+    contact: str = "example.com"
     geo_catalogs:List[GeoCatalogSchema]
 
 class CoordinateDelSchema(BaseModel):
@@ -55,6 +75,11 @@ def view_coordinate(coordinate: Coordinate):
         "id": coordinate.id,
         "latitude": coordinate.latitude,
         "longitude": coordinate.longitude,
+        "city": coordinate.city,
+        "region": coordinate.region,
+        "country": coordinate.country,
+        "name": coordinate.name,
+        "contact": coordinate.contact,
         "total_catalogs": len(coordinate.geo_catalogs),
         "geo_catalogs": [{"title": gc.title,
                           "description": gc.description,
